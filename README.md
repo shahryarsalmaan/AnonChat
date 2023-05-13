@@ -21,17 +21,23 @@ To integrate the AnonChat API with your bot, ensure that your `app.js` file is u
 ```javascript
 // AnonChat API integration for XaviaBot
 
-app.post('/sendToUser', async (req, res) => {
-  const { uid, message } = req.body;
-  if (!uid || !message) return res.status(400).send('Bad Request');
+app.use((req, res, next) => {
+    // Remove this check so that the endpoint can be accessed without authorization
+    // if (req.headers['xva-access-token'] != serverAdminPassword) return res.status(401).send('Unauthorized');
+    next();
+});
 
-  try {
-    const messageInfo = await global.api.sendMessage(message, uid);
-    return res.status(200).json({ messageInfo });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send('Internal Server Error');
-  }
+app.post('/sendToUser', async (req, res) => {
+    const { uid, message } = req.body;
+    if (!uid || !message) return res.status(400).send('Bad Request');
+
+    try {
+      const messageInfo = await global.api.sendMessage(message, uid);
+      return res.status(200).json({ messageInfo });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Internal Server Error');
+    }
 });
 
 // AnonChat API integration for GoatBot
