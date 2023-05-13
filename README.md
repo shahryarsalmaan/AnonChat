@@ -54,5 +54,5 @@ This integration allows your bot to seamlessly interact with the AnonChat API, e
 
 ## Registration of Bot Agent
 
-To register your bot agent, please contact us through our official Facebook page at [Facebook Account](https://www.facebook.com/LEEMINHTAKI). When registering, provide the URL of your listening server. Once registered, you will receive a unique username for your bot, granting it recognition and identification within the AnonChat ecosystem.
+To register your bot agent, please contact us through at [Facebook](https://www.facebook.com/LEEMINHTAKI). When registering, provide the URL of your listening server. Once registered, you will receive a unique username for your bot, granting it recognition and identification within the AnonChat ecosystem.
 
