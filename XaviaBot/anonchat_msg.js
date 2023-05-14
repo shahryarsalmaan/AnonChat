@@ -14,18 +14,30 @@ const config = {
 const agentUsername = "@youragentname"; // Set your agent username here
 
 async function onCall({ message, args }) {
-  const content = args.join(" ");
+  const input = args.join(" ");
 
-  if (!content) {
+  if (!input) {
     return message.reply("Please provide a message to send.");
   }
 
-  const uid = message.senderID;
+  if (input == "on" || input == "off") {
 
+    if (input == "on") {
+      if (global.anonchat_msg.hasOwnProperty(message.threadID)) return message.reply("AnonChat is already on");
+      global.anonchat_msg[message.threadID] = true;
+      return message.reply("AnonChat is now on");
+    } else if (input == "off") {
+      if (!global.anonchat_msg.hasOwnProperty(message.threadID)) return message.reply("AnonChat is already off");
+      delete global.anonchat_msg[message.threadID];
+      return message.reply("AnonChat is now off");
+    }
+  }
+
+  const uid = message.senderID;
   const requestData = {
     uid: uid,
     agent_username: agentUsername,
-    message: content
+    message: input
   };
 
   try {
