@@ -10,7 +10,7 @@ The `anonchat.js` plugin is your key to customizing AnonChat account settings. W
 
 The `anonchat_msg.js` and `anonchat_auto.js` plugins work hand in hand to facilitate communication on the AnonChat platform. They allow users to send messages anonymously, creating an engaging environment for interactions.
 
-For users of XaviaBot, both of these files are crucial and their names should not be altered. The `anonchat_auto.js` is essentially a part of `anonchat_msg.js` and should be saved in the `onMessage` folder. This setup allows the use of `anonchat_msg.js` without explicitly invoking it. Users can easily toggle it on or off using the `xac_msg on/off` command.
+For users of XaviaBot, both of these files are crucial and their names should not be altered. The `anonchat_auto.js` is essentially a part of `anonchat_msg.js` and should be saved in the `onMessage` folder. This setup allows the use of `anonchat_msg.js` without explicitly invoking it. Users can easily toggle it on or off using the `xac on/off` command.
 
 ## Integration Guide
 
