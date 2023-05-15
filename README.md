@@ -34,7 +34,7 @@ The above command lines will automatically install the plugin files and update y
 
 2. Manual Installation:
 
-Manually download the plugin files (`anonchat_msg.js` and `anonchat_auto.js`) and add the following code to your `app.js` file:
+Manually download the plugin files and add the following code to your `app.js` file:
 
 ```javascript
 // AnonChat API integration for XaviaBot
