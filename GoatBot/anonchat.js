@@ -4,7 +4,7 @@ const agent_username = "@your_agent_username"; // Set your agent username here
 const goatBotAnonchatCommand = {
   config: {
     name: "anonchat",
-    version: "0.0.1",
+    version: "0.0.2",
     author: "AnonChat API",
     countDown: 5,
     role: 0,
@@ -45,25 +45,25 @@ const goatBotAnonchatCommand = {
       }
 
       async function accountInfo() {
-        axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${event.senderID}`)
-            .then(response => {
-                if (response.data.success) {
-                    const { name, anonchat_username, pairing_partner } = response.data;
-                    let reply = `Name: ${name}\nUsername: ${anonchat_username}`;
+    axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${event.senderID}`)
+        .then(response => {
+            if (response.data.success) {
+                const { name, anonchat_username, language, pairing_partner } = response.data;
+                let reply = `Name: ${name}\nUsername: ${anonchat_username}\nLanguage: ${language ? language : "None"}`;
 
-                    if (pairing_partner) {
-                        reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
-                    }
-
-                    api.sendMessage(reply, event.threadID);
-                } else {
-                    api.sendMessage(`Error retrieving account info: ${response.data.message}`, event.threadID);
+                if (pairing_partner) {
+                    reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
                 }
-            })
-            .catch(error => {
-                api.sendMessage(`Error retrieving account info. Please try again.`, event.threadID);
-            });
-      }
+
+                api.sendMessage(reply, event.threadID);
+            } else {
+                api.sendMessage(`Error retrieving account info: ${response.data.message}`, event.threadID);
+            }
+        })
+        .catch(error => {
+            api.sendMessage(`Error retrieving account info. Please try again.`, event.threadID);
+        });
+}
 
       async function accountDelete() {
         try {
@@ -160,7 +160,7 @@ const goatBotAnonchatCommand = {
    
    async function accountChange() {
      try {
-       const reply = await api.sendMessage("What do you want to change? Reply with name/username/passkey.", event.threadID);
+       const reply = await api.sendMessage("What do you want to change? Reply with name/username/passkey/language.", event.threadID);
        global.GoatBot.onReply.set(reply.messageID, {
          commandName,
          author: event.senderID,
@@ -346,8 +346,8 @@ if (Reply.subCommand === "dismiss") {
 if (Reply.subCommand === "change") {
     if (Reply.changeType === "") {
         const changeType = event.body.toLowerCase();
-        if (!['name', 'username', 'passkey'].includes(changeType)) {
-            api.sendMessage(`Invalid option. Please reply with name, username, or passkey.`, event.threadID);
+        if (!['name', 'username', 'passkey', 'language'].includes(changeType)) {
+            api.sendMessage(`Invalid option. Please reply with name, username, passkey or language.`, event.threadID);
             return;
         }
         Reply.changeType = changeType;
@@ -386,7 +386,8 @@ if (Reply.subCommand === "change") {
         const changeMapping = {
             name: 'newName',
             username: 'newUsername',
-            passkey: 'newPasskey'
+            passkey: 'newPasskey',
+            language: 'newLanguage'
         };
         const changeKey = changeMapping[Reply.changeType];
 
