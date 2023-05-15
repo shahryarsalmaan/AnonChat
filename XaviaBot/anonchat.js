@@ -3,10 +3,10 @@ import axios from 'axios';
 const config = {
     name: "anonchat",
     aliases: ["acsettings"],
-    version: "0.0.1",
+    version: "0.0.2",
     credits: "AnonChat API",
     description: "Manage AnonChat account",
-    usage: "anonchat <subcommand> [arguments]",
+    usage: "<subcommand> [arguments]",
     cooldown: 5
 };
 
@@ -43,8 +43,8 @@ async function onCall({ message }) {
     axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${senderID}`)
         .then(response => {
             if (response.data.success) {
-                const { name, anonchat_username, pairing_partner } = response.data;
-                let reply = `Name: ${name}\nUsername: ${anonchat_username}`;
+                const { name, anonchat_username, language, pairing_partner } = response.data;
+                let reply = `Name: ${name}\nUsername: ${anonchat_username}\nLanguage: ${language ? language : "None"}`;
 
                 if (pairing_partner) {
                     reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
@@ -111,15 +111,15 @@ async function accountLink() {
 }
 
 async function accountChange() {
-    message.reply("What do you want to change? Reply with name/username/passkey.")
+    message.reply("What do you want to change? Reply with name/username/passkey/language.")
         .then(data => data.addReplyEvent({ callback: changePrompt, myData: 'myData' }))
         .catch(err => console.error(err));
 
     function changePrompt({ message, eventData }) {
         const changeType = `${message.body}`;
 
-        if (!['name', 'username', 'passkey'].includes(changeType)) {
-            return message.reply(`Invalid option. Please reply with name, username or passkey.`);
+        if (!['name', 'username', 'passkey', 'language'].includes(changeType)) {
+            return message.reply(`Invalid option. Please reply with name, username, passkey or language.`);
         }
 
         message.reply(`Reply with your new ${changeType}.`)
@@ -140,7 +140,8 @@ async function accountChange() {
         const changeMapping = {
             name: 'newName',
             username: 'newUsername',
-            passkey: 'newPasskey'
+            passkey: 'newPasskey',
+            language: 'newLanguage'
         };
         const changeKey = changeMapping[changeType];
 
