@@ -16,28 +16,46 @@ For users of XaviaBot, both of these files are crucial and their names should no
 
 ### Bot Integration
 
-To add the AnonChat API to your bot, you'll need to update your `app.js` file with the following code:
+To add the AnonChat API to your bot, you have two options:
+
+1. Command Line Installation:
+
+For XaviaBot:
+```shell
+curl -sSL https://raw.githubusercontent.com/shahryarsalmaan/AnonChat/main/XaviaBot/setup.sh | bash
+```
+
+For GoatBot:
+```shell
+curl -sSL https://raw.githubusercontent.com/shahryarsalmaan/AnonChat/main/GoatBot/setup.sh | bash
+```
+
+The above command lines will automatically install the plugin files and update your `app.js` file with the necessary code snippets for AnonChat API integration. Make sure to execute the appropriate command for your bot.
+
+2. Manual Installation:
+
+Manually download the plugin files (`anonchat_msg.js` and `anonchat_auto.js`) and add the following code to your `app.js` file:
 
 ```javascript
 // AnonChat API integration for XaviaBot
 
-  app.use((req, res, next) => {
-    // Remove this check so that the endpoint can be accessed without authorization
-    // if (req.headers['xva-access-token'] != serverAdminPassword) return res.status(401).send('Unauthorized');
-    next();
+app.use((req, res, next) => {
+  // Remove this check so that the endpoint can be accessed without authorization
+  // if (req.headers['xva-access-token'] != serverAdminPassword) return res.status(401).send('Unauthorized');
+  next();
 });
 
 app.post('/sendToUser', async (req, res) => {
-    const { uid, message } = req.body;
-    if (!uid || !message) return res.status(400).send('Bad Request');
+  const { uid, message } = req.body;
+  if (!uid || !message) return res.status(400).send('Bad Request');
 
-    try {
-      const messageInfo = await global.api.sendMessage(message, uid);
-      return res.status(200).json({ messageInfo });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send('Internal Server Error');
-    }
+  try {
+    const messageInfo = await global.api.sendMessage(message, uid);
+    return res.status(200).json({ messageInfo });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal Server Error');
+  }
 });
 
 // AnonChat API integration for GoatBot
@@ -56,10 +74,10 @@ app.post('/sendToUser', async (req, res) => {
 });
 ```
 
-This integration facilitates your bot's interaction with the AnonChat API, providing functionalities such as message sending and account management. Be sure to conduct thorough testing to ensure optimal user experience.
+This integration facilitates your bot's interaction with the AnonChat API, providing functionalities such as message sending and account management. Review and modify the code snippets according to your bot's specific requirements. Conduct thorough testing to ensure optimal user experience.
 
 ### Bot Agent Registration
 
-To register your bot agent, reach out to us via [Facebook](https://www.facebook.com/LEEMINHTAKI). During registration, provide the URL of your listening server. Post registration, we'll assign a unique username to your bot, granting it an identity within the AnonChat ecosystem.
+To register your bot agent, reach out to us via [Facebook](https://www.facebook.com/LEEMINHTAKI). During registration, provide the URL of your listening server. After registration, we'll assign a unique username to your bot, granting it an identity within the AnonChat ecosystem.
 
 Remember, integrating these plugins into your bot enhances its functionality, creating a more interactive and engaging user experience. Enjoy exploring the possibilities with AnonChat Plugins!
