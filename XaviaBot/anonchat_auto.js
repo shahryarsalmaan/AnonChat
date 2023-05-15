@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const agentUsername = "@youragentname"; // Set your agent username here
+const agentUsername = "@your_agent_username"; // Set your agent username here
 
 const onLoad = () => {
   if (!global.hasOwnProperty("anonchat_auto")) global.anonchat_auto = {};
@@ -10,7 +10,7 @@ const onCall = async ({ message }) => {
   const { senderID, threadID, body } = message;
 
   if (senderID == global.botID) return;
-  if (!global.anonchat_auto.hasOwnProperty(threadID) || !global.anonchat_auto[threadID]) return;
+  if (!global.anonchat_msg.hasOwnProperty(threadID) || !global.anonchat_msg[threadID]) return;
   if (body.startsWith(`ac off`)) return;
 
   const requestData = {
