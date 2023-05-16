@@ -3,7 +3,7 @@ import axios from 'axios';
 const config = {
     name: "anonchat",
     aliases: ["acsettings"],
-    version: "0.0.2",
+    version: "0.0.3",
     credits: "AnonChat API",
     description: "Manage AnonChat account",
     usage: "<subcommand> [arguments]",
@@ -35,31 +35,59 @@ async function onCall({ message }) {
             return accountAccept();
         case 'dismiss':
             return accountDismiss();
+        case 'pairnoti':
+            return pairNotification();
         default:
             return message.reply("Invalid subcommand. Please use 'create', 'info', 'link', 'change', 'sendreq', 'pair', 'dismiss' or 'delete'.");
     }
 
     async function accountInfo() {
-    axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${senderID}`)
-        .then(response => {
-            if (response.data.success) {
-                const { name, anonchat_username, language, pairing_partner } = response.data;
-                let reply = `Name: ${name}\nUsername: ${anonchat_username}\nLanguage: ${language ? language : "None"}`;
+    message.reply("Reply with your passkey.")
+        .then(data => data.addReplyEvent({ callback: getInfo, myData: 'myData' }))
+        .catch(err => console.error(err));
 
-                if (pairing_partner) {
-                    reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
+    function getInfo({ message }) {
+        const passkey = `${message.body}`;
+        message.send("Retrieving account info, please wait...");
+
+        axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${senderID}&passkey=${passkey}`)
+            .then(response => {
+                if (response.data.success) {
+                    const { name, anonchat_username, language, pairing_partner } = response.data;
+                    let reply = `Name: ${name}\nUsername: ${anonchat_username}\nLanguage: ${language ? language : "None"}`;
+
+                    if (pairing_partner) {
+                        reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
+                    }
+
+                    message.reply(reply);
+                } else {
+                    message.reply(`Error retrieving account info: ${response.data.message}`);
                 }
-
-                message.reply(reply);
-            } else {
-                message.reply(`Error retrieving account info: ${response.data.message}`);
-            }
-        })
-        .catch(error => {
-            message.reply(`Error retrieving account info. Please try again.`);
-        });
+            })
+            .catch(error => {
+                message.reply(`Error retrieving account info. Please try again.`);
+            });
+    }
 }
 
+async function pairNotification() {
+  message.send("Changing pairing notification, please wait...");
+
+  const accountDetails = { uid: senderID, linked_agent: agent_username };
+
+  axios.post("https://anonchat.xaviabot.repl.co/menu/pairing", accountDetails)
+    .then(response => {
+      if (response.data.success) {
+        message.reply(response.data.message);
+      } else {
+        message.reply(`Error changing pairing notification: ${response.data.message}`);
+      }
+    })
+    .catch(error => {
+      message.reply(`Error changing pairing notification. Please try again.`);
+    });
+}
     async function accountDelete() {
         message.reply("Reply with your passkey.")
             .then(data => data.addReplyEvent({ callback: deleteAccount, myData: 'myData' }))
@@ -272,7 +300,6 @@ async function accountDismiss() {
             });
     };
 }
-
 }
 
 export {
