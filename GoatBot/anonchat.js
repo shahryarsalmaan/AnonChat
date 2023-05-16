@@ -4,16 +4,16 @@ const agent_username = "@your_agent_username"; // Set your agent username here
 const goatBotAnonchatCommand = {
   config: {
     name: "anonchat",
-    version: "0.0.2",
+    version: "0.0.3",
     author: "AnonChat API",
     countDown: 5,
     role: 0,
     shortDescription: {
-      vi: "Manage AnonChat account",
+      vi: "Quản lý tài khoản AnonChat",
       en: "Manage AnonChat account"
     },
     longDescription: {
-      vi: "Manage AnonChat account",
+      vi: "Quản lý tài khoản AnonChat",
       en: "Manage AnonChat account"
     },
     category: "anonchat"
@@ -40,31 +40,43 @@ const goatBotAnonchatCommand = {
             return accountDismiss();
         case 'change':
             return accountChange();
+        case 'pairnoti':
+            return pairNotification();
         default:
-            return api.sendMessage("Invalid subcommand. Please use 'create', 'info', 'link', 'change', 'sendreq', 'pair', 'dismiss' or 'delete'.", event.threadID);
+            return api.sendMessage("Invalid subcommand. Please use 'create', 'info', 'link', 'change', 'sendreq', 'pair', 'pairnoti', 'dismiss' or 'delete'.", event.threadID);
       }
 
       async function accountInfo() {
-    axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${event.senderID}`)
-        .then(response => {
-            if (response.data.success) {
-                const { name, anonchat_username, language, pairing_partner } = response.data;
-                let reply = `Name: ${name}\nUsername: ${anonchat_username}\nLanguage: ${language ? language : "None"}`;
-
-                if (pairing_partner) {
-                    reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
-                }
-
-                api.sendMessage(reply, event.threadID);
-            } else {
-                api.sendMessage(`Error retrieving account info: ${response.data.message}`, event.threadID);
-            }
-        })
-        .catch(error => {
-            api.sendMessage(`Error retrieving account info. Please try again.`, event.threadID);
-        });
+  try {
+    const reply = await api.sendMessage("Reply with your passkey.", event.threadID);
+    global.GoatBot.onReply.set(reply.messageID, {
+      commandName,
+      author: event.senderID,
+      messageID: reply.messageID,
+      subCommand: "info",
+      passkey: ""
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
+async function pairNotification() {
+  api.sendMessage("Changing pairing notification, please wait...", event.threadID);
+  const accountDetails = { uid: event.senderID, linked_agent: agent_username };
+
+  axios.post("https://anonchat.xaviabot.repl.co/menu/pairing", accountDetails)
+    .then(response => {
+      if (response.data.success) {
+        api.sendMessage(response.data.message, event.threadID);
+      } else {
+        api.sendMessage(`Error changing pairing notification: ${response.data.message}`, event.threadID);
+      }
+    })
+    .catch(error => {
+      api.sendMessage(`Error changing pairing notification. Please try again.`, event.threadID);
+    });
+}
       async function accountDelete() {
         try {
           const reply = await api.sendMessage(`Reply with your passkey.`, event.threadID);
@@ -179,6 +191,32 @@ const goatBotAnonchatCommand = {
       if (event.senderID != Reply.author) {
         return api.sendMessage("Sorry, you are not authorized to use this command. 😐", event.threadID);
       }
+      
+     if (Reply.subCommand === "info" && Reply.passkey === "") {
+       Reply.passkey = event.body;
+     
+       axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${event.senderID}&passkey=${Reply.passkey}`)
+         .then(response => {
+           if (response.data.success) {
+             const { name, anonchat_username, language, pairing_partner } = response.data;
+             let reply = `Name: ${name}\nUsername: ${anonchat_username}\nLanguage: ${language ? language : "None"}`;
+     
+             if (pairing_partner) {
+               reply += `\nPairing Partner: ${pairing_partner.name} (${pairing_partner.anonchat_username})`;
+             }
+     
+             api.sendMessage(reply, event.threadID);
+           } else {
+             api.sendMessage(`Error retrieving account info: ${response.data.message}`, event.threadID);
+           }
+         })
+         .catch(error => {
+           api.sendMessage(`Error retrieving account info. Please try again.`, event.threadID);
+         });
+     
+       // Clear the onReply listener after use
+       global.GoatBot.onReply.delete(Reply.messageID);
+     }
 
       if (Reply.subCommand === "delete" && Reply.passkey === "") {
         Reply.passkey = event.body;
