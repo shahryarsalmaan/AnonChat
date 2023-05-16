@@ -38,7 +38,7 @@ async function onCall({ message }) {
         case 'pairnoti':
             return pairNotification();
         default:
-            return message.reply("Invalid subcommand. Please use 'create', 'info', 'link', 'change', 'sendreq', 'pair', 'dismiss' or 'delete'.");
+            return message.reply("Invalid subcommand. Please use 'create', 'info', 'link', 'change', 'sendreq', 'pair', 'pairnoti', 'dismiss' or 'delete'.");
     }
 
     async function accountInfo() {
