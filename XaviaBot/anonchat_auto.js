@@ -20,7 +20,7 @@ const onCall = async ({ message }) => {
   };
 
   try {
-    const response = await axios.post("https://anonchat.xaviabot.repl.co/send_message", requestData);
+    const response = await axios.post("https://chat.whisperly.repl.co/send_message", requestData);
     const { data } = response;
     if (data.success) {
       await message.react("✅");
