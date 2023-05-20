@@ -3,7 +3,7 @@ import axios from 'axios';
 const config = {
     name: "anonchat",
     aliases: ["acsettings"],
-    version: "0.0.3",
+    version: "0.0.4",
     credits: "AnonChat API",
     description: "Manage AnonChat account",
     usage: "<subcommand> [arguments]",
@@ -50,7 +50,7 @@ async function onCall({ message }) {
         const passkey = `${message.body}`;
         message.send("Retrieving account info, please wait...");
 
-        axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${senderID}&passkey=${passkey}`)
+        axios.get(`https://chat.whisperly.repl.co/menu/account?uid=${senderID}&passkey=${passkey}`)
             .then(response => {
                 if (response.data.success) {
                     const { name, anonchat_username, language, pairing_partner } = response.data;
@@ -62,7 +62,7 @@ async function onCall({ message }) {
 
                     message.reply(reply);
                 } else {
-                    message.reply(`Error retrieving account info: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
@@ -76,12 +76,12 @@ async function pairNotification() {
 
   const accountDetails = { uid: senderID, linked_agent: agent_username };
 
-  axios.post("https://anonchat.xaviabot.repl.co/menu/pairing", accountDetails)
+  axios.post("https://chat.whisperly.repl.co/menu/pairing", accountDetails)
     .then(response => {
       if (response.data.success) {
         message.reply(response.data.message);
       } else {
-        message.reply(`Error changing pairing notification: ${response.data.message}`);
+        message.reply(`${response.data.message}`);
       }
     })
     .catch(error => {
@@ -99,12 +99,12 @@ async function pairNotification() {
 
             const accountDetails = { uid: senderID, passkey };
 
-            axios.put("https://anonchat.xaviabot.repl.co/menu/delete-account", accountDetails)
+            axios.put("https://chat.whisperly.repl.co/menu/delete-account", accountDetails)
                 .then(response => {
                     if (response.data.success) {
                         message.reply(`Account deleted successfully.`);
                     } else {
-                        message.reply(`Error deleting account: ${response.data.message}`);
+                        message.reply(`${response.data.message}`);
                     }
                 })
                 .catch(error => {
@@ -124,12 +124,12 @@ async function accountLink() {
 
         const accountDetails = { uid: senderID, passkey, newLinkedAgent: agent_username };
 
-        axios.put("https://anonchat.xaviabot.repl.co/menu/change", accountDetails)
+        axios.put("https://chat.whisperly.repl.co/menu/change", accountDetails)
             .then(response => {
                 if (response.data.success) {
                     message.reply(`Account linked successfully with ${agent_username}`);
                 } else {
-                    message.reply(`Error linking account: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
@@ -177,12 +177,12 @@ async function accountChange() {
 
         const accountDetails = { uid: senderID, passkey, [changeKey]: newValue };
 
-        axios.put("https://anonchat.xaviabot.repl.co/menu/change", accountDetails)
+        axios.put("https://chat.whisperly.repl.co/menu/change", accountDetails)
             .then(response => {
                 if (response.data.success) {
                     message.reply(`Account ${changeType} changed successfully.`);
                 } else {
-                    message.reply(`Error changing account ${changeType}: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
@@ -210,12 +210,12 @@ async function accountCreate() {
 
         const accountDetails = { uid: senderID, name, passkey, agent_username };
 
-        axios.post("https://anonchat.xaviabot.repl.co/create_account", accountDetails)
+        axios.post("https://chat.whisperly.repl.co/create_account", accountDetails)
             .then(response => {
                 if (response.data.success) {
                     message.reply(`Account created successfully. Welcome, ${name}! Your AnonChat username is ${response.data.anonchat_username}`);
                 } else {
-                    message.reply(`Error creating account: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
@@ -235,12 +235,12 @@ async function accountSendReq() {
 
         const requestDetails = { uid: senderID, agent_username, message: msg };
 
-        axios.post("https://anonchat.xaviabot.repl.co/pair_request/send", requestDetails)
+        axios.post("https://chat.whisperly.repl.co/pair_request/send", requestDetails)
             .then(response => {
                 if (response.data.success) {
                     message.reply(`Pairing request sent successfully.`);
                 } else {
-                    message.reply(`Error sending pairing request: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
@@ -260,12 +260,12 @@ async function accountAccept() {
 
         const requestDetails = { uid: senderID, username };
 
-        axios.post("https://anonchat.xaviabot.repl.co/pair_request/accept", requestDetails)
+        axios.post("https://chat.whisperly.repl.co/pair_request/accept", requestDetails)
             .then(response => {
                 if (response.data.success) {
                     message.reply(`Pairing request accepted successfully.`);
                 } else {
-                    message.reply(`Error accepting pairing request: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
@@ -287,12 +287,12 @@ async function accountDismiss() {
           uid: message.senderID,
           passkey };
 
-        axios.post("https://anonchat.xaviabot.repl.co/dismiss_pair/dismiss", pairDetails)
+        axios.post("https://chat.whisperly.repl.co/dismiss_pair/dismiss", pairDetails)
             .then(response => {
                 if (response.data.success) {
                     message.reply(`Pair dismissed successfully.`);
                 } else {
-                    message.reply(`Error dismissing pair: ${response.data.message}`);
+                    message.reply(`${response.data.message}`);
                 }
             })
             .catch(error => {
