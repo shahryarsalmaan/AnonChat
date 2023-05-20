@@ -1,4 +1,5 @@
 import axios from 'axios';
+const agentUsername = "@your_agent_username"; // Set your agent username here
 
 const config = {
   name: "anonchat_msg",
@@ -10,8 +11,6 @@ const config = {
   credits: "AnonChat API",
   dependencies: ["axios"]
 };
-
-const agentUsername = "@youragentusername"; // Set your agent username here
 
 // Initialize the global object in the onLoad function
 function onLoad() {
@@ -44,7 +43,7 @@ async function onCall({ message, args, userPermissions }) {
       };
 
       try {
-        const response = await axios.post("https://anonchat.xaviabot.repl.co/send_message", requestData);
+        const response = await axios.post("https://chat.whisperly.repl.co/send_message", requestData);
         const data = response.data;
 
         if (data.success) {
