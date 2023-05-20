@@ -6,11 +6,11 @@ const goatBotAnonChatMSGCommand = {
     name: "anonchat_msg",
     aliases: ["ac"],
     shortDescription: {
-      vi: "Send a message to AnonChat",
+      vi: "Gửi tin nhắn đến AnonChat",
       en: "Send a message to AnonChat"
     },
     longDescription: {
-      vi: "Send a message to AnonChat",
+      vi: "Gửi tin nhắn đến AnonChat",
       en: "Send a message to AnonChat"
     },
     category: "anonchat",
@@ -52,7 +52,7 @@ const goatBotAnonChatMSGCommand = {
     };
 
     try {
-      const response = await axios.post("https://anonchat.xaviabot.repl.co/send_message", requestData);
+      const response = await axios.post("https://chat.whisperly.repl.co/send_message", requestData);
       const data = response.data;
 
       if (data.success) {
@@ -86,7 +86,7 @@ const goatBotAnonChatMSGCommand = {
     };
 
     try {
-      const response = await axios.post("https://anonchat.xaviabot.repl.co/send_message", requestData);
+      const response = await axios.post("https://chat.whisperly.repl.co/send_message", requestData);
       const data = response.data;
 
       if (data.success) {
