@@ -4,7 +4,7 @@ const agent_username = "@your_agent_username"; // Set your agent username here
 const goatBotAnonchatCommand = {
   config: {
     name: "anonchat",
-    version: "0.0.3",
+    version: "0.0.4",
     author: "AnonChat API",
     countDown: 5,
     role: 0,
@@ -65,12 +65,12 @@ async function pairNotification() {
   api.sendMessage("Changing pairing notification, please wait...", event.threadID);
   const accountDetails = { uid: event.senderID, linked_agent: agent_username };
 
-  axios.post("https://anonchat.xaviabot.repl.co/menu/pairing", accountDetails)
+  axios.post("https://chat.whisperly.repl.co/menu/pairing", accountDetails)
     .then(response => {
       if (response.data.success) {
         api.sendMessage(response.data.message, event.threadID);
       } else {
-        api.sendMessage(`Error changing pairing notification: ${response.data.message}`, event.threadID);
+        api.sendMessage(`${response.data.message}`, event.threadID);
       }
     })
     .catch(error => {
@@ -195,7 +195,7 @@ async function pairNotification() {
      if (Reply.subCommand === "info" && Reply.passkey === "") {
        Reply.passkey = event.body;
      
-       axios.get(`https://anonchat.xaviabot.repl.co/menu/account?uid=${event.senderID}&passkey=${Reply.passkey}`)
+       axios.get(`https://chat.whisperly.repl.co/menu/account?uid=${event.senderID}&passkey=${Reply.passkey}`)
          .then(response => {
            if (response.data.success) {
              const { name, anonchat_username, language, pairing_partner } = response.data;
@@ -207,7 +207,7 @@ async function pairNotification() {
      
              api.sendMessage(reply, event.threadID);
            } else {
-             api.sendMessage(`Error retrieving account info: ${response.data.message}`, event.threadID);
+             api.sendMessage(`${response.data.message}`, event.threadID);
            }
          })
          .catch(error => {
@@ -224,12 +224,12 @@ async function pairNotification() {
 
         const accountDetails = { uid: event.senderID, passkey: Reply.passkey };
 
-        axios.put("https://anonchat.xaviabot.repl.co/menu/delete-account", accountDetails)
+        axios.put("https://chat.whisperly.repl.co/menu/delete-account", accountDetails)
             .then(response => {
                 if (response.data.success) {
                     api.sendMessage(`Account deleted successfully.`, event.threadID);
                 } else {
-                    api.sendMessage(`Error deleting account: ${response.data.message}`, event.threadID);
+                    api.sendMessage(`${response.data.message}`, event.threadID);
                 }
             })
             .catch(error => {
@@ -249,12 +249,12 @@ async function pairNotification() {
 
     const accountDetails = { uid: event.senderID, passkey: Reply.passkey, newLinkedAgent: agent_username };
 
-    axios.put("https://anonchat.xaviabot.repl.co/menu/change", accountDetails)
+    axios.put("https://chat.whisperly.repl.co/menu/change", accountDetails)
         .then(response => {
             if (response.data.success) {
                 api.sendMessage(`Account linked successfully with ${agent_username}`, event.threadID);
             } else {
-                api.sendMessage(`Error linking account: ${response.data.message}`, event.threadID);
+                api.sendMessage(`${response.data.message}`, event.threadID);
             }
         })
         .catch(error => {
@@ -289,12 +289,12 @@ if (Reply.subCommand === "create") {
             agent_username
         };
 
-        axios.post("https://anonchat.xaviabot.repl.co/create_account", accountDetails)
+        axios.post("https://chat.whisperly.repl.co/create_account", accountDetails)
             .then(response => {
                 if (response.data.success) {
                     api.sendMessage(`Account created successfully. Welcome, ${Reply.name}! Your AnonChat username is ${response.data.anonchat_username}`, event.threadID);
                 } else {
-                    api.sendMessage(`Error creating account: ${response.data.message}`, event.threadID);
+                    api.sendMessage(`${response.data.message}`, event.threadID);
                 }
             })
             .catch(error => {
@@ -316,12 +316,12 @@ if (Reply.subCommand === "sendreq") {
         message: Reply.message
     };
 
-    axios.post("https://anonchat.xaviabot.repl.co/pair_request/send", requestDetails)
+    axios.post("https://chat.whisperly.repl.co/pair_request/send", requestDetails)
         .then(response => {
             if (response.data.success) {
                 api.sendMessage(`Pairing request sent successfully.`, event.threadID);
             } else {
-                api.sendMessage(`Error sending pairing request: ${response.data.message}`, event.threadID);
+                api.sendMessage(`${response.data.message}`, event.threadID);
             }
         })
         .catch(error => {
@@ -341,12 +341,12 @@ if (Reply.subCommand === "pair") {
         username: Reply.username
     };
 
-    axios.post("https://anonchat.xaviabot.repl.co/pair_request/accept", requestDetails)
+    axios.post("https://chat.whisperly.repl.co/pair_request/accept", requestDetails)
         .then(response => {
             if (response.data.success) {
                 api.sendMessage(`Pairing request accepted successfully.`, event.threadID);
             } else {
-                api.sendMessage(`Error accepting pairing request: ${response.data.message}`, event.threadID);
+                api.sendMessage(`${response.data.message}`, event.threadID);
             }
         })
         .catch(error => {
@@ -366,12 +366,12 @@ if (Reply.subCommand === "dismiss") {
         passkey: Reply.passkey
     };
 
-    axios.post("https://anonchat.xaviabot.repl.co/dismiss_pair/dismiss", pairDetails)
+    axios.post("https://chat.whisperly.repl.co/dismiss_pair/dismiss", pairDetails)
         .then(response => {
             if (response.data.success) {
                 api.sendMessage(`Pair dismissed successfully.`, event.threadID);
             } else {
-                api.sendMessage(`Error dismissing pair: ${response.data.message}`, event.threadID);
+                api.sendMessage(`${response.data.message}`, event.threadID);
             }
         })
         .catch(error => {
@@ -435,12 +435,12 @@ if (Reply.subCommand === "change") {
             [changeKey]: Reply.newValue
         };
 
-        axios.put("https://anonchat.xaviabot.repl.co/menu/change", accountDetails)
+        axios.put("https://chat.whisperly.repl.co/menu/change", accountDetails)
             .then(response => {
                 if (response.data.success) {
                     api.sendMessage(`Account ${Reply.changeType} changed successfully.`, event.threadID);
                 } else {
-                    api.sendMessage(`Error changing account ${Reply.changeType}: ${response.data.message}`, event.threadID);
+                    api.sendMessage(`${response.data.message}`, event.threadID);
                 }
             })
             .catch(error => {
