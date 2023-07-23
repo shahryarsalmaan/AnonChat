@@ -78,6 +78,6 @@ This integration facilitates your bot's interaction with the AnonChat API, provi
 
 ### Bot Agent Registration
 
-To register your bot agent, reach out to us via [Facebook](https://www.facebook.com/LEEMINHTAKI). During registration, provide the URL of your listening server. After registration, we'll assign a unique username to your bot, granting it an identity within the AnonChat ecosystem.
+To register your bot agent, reach out to us via [Facebook](https://www.facebook.com/ShahryarSalmaan.xd). During registration, provide the URL of your listening server. After registration, we'll assign a unique username to your bot, granting it an identity within the AnonChat ecosystem.
 
 Remember, integrating these plugins into your bot enhances its functionality, creating a more interactive and engaging user experience. Enjoy exploring the possibilities with AnonChat Plugins!
